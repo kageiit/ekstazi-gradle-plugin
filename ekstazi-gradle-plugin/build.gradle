@@ -1,0 +1,57 @@
+plugins {
+    id 'java'
+    id "maven-publish"
+    id "com.jfrog.bintray" version "1.7.3"
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    compile gradleApi()
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+def publishVersion = '0.1.0'
+group = 'com.kageiit'
+version = publishVersion
+def siteUrl = 'https://github.com/kageiit/ekstazi-gradle-plugin'
+def gitUrl = 'https://github.com/kageiit/ekstazi-gradle-plugin.git'
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifactId 'ekstazi-gradle-plugin'
+        }
+    }
+}
+
+bintray {
+    user = project.properties.get("bintray.user")
+    key = project.properties.get("bintray.apikey")
+    publications = ['mavenJava']
+    dryRun = false
+    publish = true
+    pkg {
+        repo = 'gradle-plugins'
+        name = 'ekstazi-gradle-plugin'
+        desc = 'Gradle plugin to run tests with ekstazi - the lightweight test selection library'
+        websiteUrl = siteUrl
+        issueTrackerUrl = siteUrl + '/issues'
+        vcsUrl = gitUrl
+        licenses = ['MIT']
+        labels = ['testing', 'test-selection', 'gradle-plugin', 'ekstazi']
+        publicDownloadNumbers = true
+        version {
+            name = publishVersion
+            released = new java.text.SimpleDateFormat('yyyy-MM-dd\'T\'HH:mm:ss.SSSZZ').format(new Date())
+            vcsTag = publishVersion
+        }
+    }
+}
