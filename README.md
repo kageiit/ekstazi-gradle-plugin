@@ -16,7 +16,7 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath "com.kageiit:gradle-ekstazi-plugin:0.1.0"
+    classpath "com.kageiit:ekstazi-gradle-plugin:0.1.0"
   }
 }
 
